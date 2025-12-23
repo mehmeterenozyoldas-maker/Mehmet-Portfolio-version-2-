@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Mehmet Eren Ozyoldash | Designer & Futurist version 2",
+  "description": "Portfolio of Mehmet Eren Ozyoldash - Designer, Futurist, and Researcher based in Sweden. Specializing in Speculative Design, XR, and AI.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
