@@ -5,18 +5,10 @@ import Avatar3D from './components/Avatar3D';
 import InteractiveCV from './components/InteractiveCV';
 import EditableText from './components/EditableText';
 import { Project } from './types';
-import { GithubIcon, ExternalLinkIcon, MenuIcon, SparklesIcon, YoutubeIcon, MediumIcon } from './components/Icons';
+import { GithubIcon, ExternalLinkIcon, MenuIcon, SparklesIcon, YoutubeIcon, MediumIcon, EditIcon } from './components/Icons';
 import { ContentProvider, useContent } from './contexts/ContentContext';
 import CustomCursor from './components/CustomCursor';
 import Magnetic from './components/Magnetic';
-
-// Admin Lock Icon Component
-const LockIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-  </svg>
-);
 
 const AppContent: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -30,7 +22,7 @@ const AppContent: React.FC = () => {
   const [adminPassword, setAdminPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   
-  const { projects, isEditMode, login, logout, saveChanges, resetContent, downloadSourceCode } = useContent();
+  const { projects, isEditMode, login, logout, saveChanges, resetContent, exportContent } = useContent();
 
   // Dynamic Categories based on current projects
   const categories = useMemo(() => {
@@ -63,7 +55,7 @@ const AppContent: React.FC = () => {
       }
     );
 
-    const sections = ['about', 'work', 'trajectory', 'contact'];
+    const sections = ['about', 'work', 'interactive-cv', 'contact'];
     sections.forEach(id => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
@@ -147,7 +139,7 @@ const AppContent: React.FC = () => {
           <div className="hidden lg:flex items-center gap-8">
             <NavLink id="about" label="About" />
             <NavLink id="work" label="Work" />
-            <NavLink id="trajectory" label="Trajectory" />
+            <NavLink id="interactive-cv" label="Interactive CV" />
             <NavLink id="contact" label="Contact" />
             
             <div className="flex items-center gap-2 ml-4">
@@ -206,7 +198,7 @@ const AppContent: React.FC = () => {
           <div className="flex flex-col gap-6 text-2xl font-bold">
             <button className="text-left hover:text-indigo-400 transition-colors" onClick={() => scrollToSection('about')}>About</button>
             <button className="text-left hover:text-indigo-400 transition-colors" onClick={() => scrollToSection('work')}>Work</button>
-            <button className="text-left hover:text-indigo-400 transition-colors" onClick={() => scrollToSection('trajectory')}>Trajectory</button>
+            <button className="text-left hover:text-indigo-400 transition-colors" onClick={() => scrollToSection('interactive-cv')}>Interactive CV</button>
             <button className="text-left hover:text-indigo-400 transition-colors" onClick={() => scrollToSection('contact')}>Contact</button>
             <div className="flex flex-col gap-4 mt-4 pt-4 border-t border-zinc-800">
               <a href="https://github.com/mehmeterenozyoldas-maker" className="flex items-center gap-2 text-lg font-medium text-zinc-400 hover:text-white">
@@ -332,12 +324,12 @@ const AppContent: React.FC = () => {
       </section>
 
        {/* Interactive CV Terminal */}
-       <section id="trajectory" className="py-20 px-6 bg-zinc-900/30 relative">
+       <section id="interactive-cv" className="py-20 px-6 bg-zinc-900/30 relative">
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="mb-16 text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4" data-cursor="text">The Data Deck</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4" data-cursor="text">Interactive CV</h2>
             <p className="text-zinc-400 max-w-2xl mx-auto" data-cursor="text">
-              Explore my trajectory through this interactive terminal. 
+              Explore my journey through this interactive terminal. 
               Enable the camera to navigate using hand gestures (Minority Report style), or simply click through.
             </p>
           </div>
@@ -382,15 +374,15 @@ const AppContent: React.FC = () => {
           </div>
         </div>
         
-        {/* Admin Trigger (Fixed Positioning & Z-Index) */}
+        {/* Admin/Feedback Trigger (Fixed Positioning & Z-Index) */}
         <div className="fixed bottom-4 left-4 z-50">
           <button 
              onClick={handleAdminClick} 
              className="p-3 bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-600 rounded-full transition-all shadow-lg"
-             title={isEditMode ? "Exit Admin Mode" : "Admin Access"}
+             title={isEditMode ? "Exit Feedback Mode" : "Enter Feedback Mode"}
              data-cursor="pointer"
           >
-            <LockIcon className={`w-5 h-5 ${isEditMode ? 'text-green-500' : ''}`} />
+            <EditIcon className={`w-5 h-5 ${isEditMode ? 'text-green-500' : ''}`} />
           </button>
         </div>
       </footer>
@@ -409,10 +401,10 @@ const AppContent: React.FC = () => {
             
             <div className="mb-6 text-center">
               <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                <LockIcon className="w-6 h-6 text-indigo-500" />
+                <EditIcon className="w-6 h-6 text-indigo-500" />
               </div>
-              <h3 className="text-xl font-bold text-white">Admin Access</h3>
-              <p className="text-sm text-zinc-500 mt-1">Enter password to edit content</p>
+              <h3 className="text-xl font-bold text-white">Feedback Mode</h3>
+              <p className="text-sm text-zinc-500 mt-1">Enter 'review' to enable content editing tools.</p>
             </div>
             
             <form onSubmit={submitLogin} className="space-y-4">
@@ -424,12 +416,12 @@ const AppContent: React.FC = () => {
                     setAdminPassword(e.target.value);
                     setLoginError(false);
                   }}
-                  placeholder="Password"
+                  placeholder="Code: review"
                   className={`w-full bg-zinc-950 border ${loginError ? 'border-red-500' : 'border-zinc-700'} rounded-lg px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 transition-colors`}
                   autoFocus
                   data-cursor="text"
                 />
-                {loginError && <p className="text-red-500 text-xs mt-2 ml-1">Incorrect password</p>}
+                {loginError && <p className="text-red-500 text-xs mt-2 ml-1">Incorrect access code</p>}
               </div>
               
               <button 
@@ -437,7 +429,7 @@ const AppContent: React.FC = () => {
                 className="w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 font-bold transition-all shadow-lg shadow-indigo-900/20"
                 data-cursor="pointer"
               >
-                Unlock Portfolio
+                Start Reviewing
               </button>
             </form>
           </div>
@@ -450,19 +442,20 @@ const AppContent: React.FC = () => {
           <div className="flex items-center gap-4">
             <span className="text-xs font-bold text-green-400 uppercase tracking-wider flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              Edit Mode Active
+              Feedback Mode Active
             </span>
-            <span className="text-xs text-zinc-500 hidden sm:inline">Click dashed text to edit. Changes save to browser.</span>
+            <span className="text-xs text-zinc-500 hidden sm:inline">Click any dashed text to edit. Changes are local.</span>
           </div>
           <div className="flex gap-3">
             <button onClick={resetContent} className="px-4 py-2 bg-red-900/30 text-red-400 hover:bg-red-900/50 text-xs font-bold rounded-md transition-colors border border-red-900/50" data-cursor="pointer">
               Reset
             </button>
-            <button onClick={downloadSourceCode} className="px-4 py-2 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-xs font-bold rounded-md transition-colors border border-zinc-700" data-cursor="pointer">
-              Download Source
+            <button onClick={exportContent} className="px-4 py-2 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-xs font-bold rounded-md transition-colors border border-zinc-700 flex items-center gap-2" data-cursor="pointer">
+              <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
+              Share Feedback
             </button>
             <button onClick={saveChanges} className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-500 text-xs font-bold rounded-md transition-colors shadow-lg shadow-indigo-500/20" data-cursor="pointer">
-              Save Locally
+              Save Draft
             </button>
           </div>
         </div>

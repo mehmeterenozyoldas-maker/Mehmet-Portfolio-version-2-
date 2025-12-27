@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Project } from '../types';
 
 interface ProjectCardProps {
@@ -7,9 +7,11 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <div 
-      className={`group relative bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden transition-all duration-500 cursor-none h-full
+      className={`group relative bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden transition-all duration-500 ease-out cursor-none h-full
         hover:border-indigo-500/50 hover:-translate-y-2 hover:scale-[1.02] 
         hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7),0_0_20px_rgba(99,102,241,0.1)]
         hover:ring-1 hover:ring-indigo-500/20`}
@@ -17,12 +19,23 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
       data-cursor="pointer"
     >
       {/* Image Container */}
-      <div className={`overflow-hidden relative w-full ${project.featured ? 'h-96 md:h-full' : 'h-64'}`}>
+      <div className={`overflow-hidden relative w-full bg-zinc-800 ${project.featured ? 'h-96 md:h-full' : 'h-64'}`}>
+        
+        {/* Loading Placeholder */}
+        <div className={`absolute inset-0 bg-zinc-800 flex items-center justify-center transition-opacity duration-500 ${imageLoaded ? 'opacity-0' : 'opacity-100'}`}>
+            <div className="w-8 h-8 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
+        </div>
+
         <img 
           src={project.imageUrl} 
           alt={project.title}
-          className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700 ease-out grayscale group-hover:grayscale-0"
+          loading="lazy"
+          onLoad={() => setImageLoaded(true)}
+          className={`w-full h-full object-cover object-center transform group-hover:scale-110 transition-all duration-700 ease-out 
+            ${imageLoaded ? 'opacity-100 grayscale group-hover:grayscale-0' : 'opacity-0 scale-105'}
+          `}
         />
+        
         {/* Overlay Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-500" />
         <div className="absolute inset-0 bg-indigo-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

@@ -262,8 +262,9 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   const login = (password: string) => {
-    // Simple client-side check. In a real app, use auth.
-    if (password === 'admin') {
+    // Allow 'review' or 'admin' for ease of access during review phase
+    const pass = password.trim().toLowerCase();
+    if (pass === 'review' || pass === 'admin') {
       setIsEditMode(true);
       return true;
     }
@@ -305,7 +306,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const exportContent = () => {
     const data = { projects, experience, texts };
     navigator.clipboard.writeText(JSON.stringify(data, null, 2));
-    alert('Content JSON copied to clipboard! You can use this to update the codebase.');
+    alert('Content JSON copied to clipboard! You can use this to update the codebase or share feedback.');
   };
 
   const downloadSourceCode = () => {
