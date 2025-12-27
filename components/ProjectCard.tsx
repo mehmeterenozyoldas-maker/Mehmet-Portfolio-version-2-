@@ -9,11 +9,12 @@ interface ProjectCardProps {
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   return (
     <div 
-      className={`group relative bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden transition-all duration-500 cursor-pointer h-full
+      className={`group relative bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden transition-all duration-500 cursor-none h-full
         hover:border-indigo-500/50 hover:-translate-y-2 hover:scale-[1.02] 
         hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7),0_0_20px_rgba(99,102,241,0.1)]
         hover:ring-1 hover:ring-indigo-500/20`}
       onClick={onClick}
+      data-cursor="pointer"
     >
       {/* Image Container */}
       <div className={`overflow-hidden relative w-full ${project.featured ? 'h-96 md:h-full' : 'h-64'}`}>

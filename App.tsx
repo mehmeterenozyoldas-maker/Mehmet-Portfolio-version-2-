@@ -7,6 +7,8 @@ import EditableText from './components/EditableText';
 import { Project } from './types';
 import { GithubIcon, ExternalLinkIcon, MenuIcon, SparklesIcon, YoutubeIcon, MediumIcon } from './components/Icons';
 import { ContentProvider, useContent } from './contexts/ContentContext';
+import CustomCursor from './components/CustomCursor';
+import Magnetic from './components/Magnetic';
 
 // Admin Lock Icon Component
 const LockIcon = ({ className }: { className?: string }) => (
@@ -111,25 +113,31 @@ const AppContent: React.FC = () => {
   };
 
   const NavLink = ({ id, label }: { id: string, label: string }) => (
-    <button 
-      onClick={() => scrollToSection(id)}
-      className={`text-sm font-medium transition-colors relative group ${
-        activeSection === id ? 'text-white' : 'text-zinc-400 hover:text-white'
-      }`}
-    >
-      {label}
-      {activeSection === id && (
-        <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-500 rounded-full animate-fade-in" />
-      )}
-    </button>
+    <Magnetic strength={0.4}>
+      <button 
+        onClick={() => scrollToSection(id)}
+        className={`text-sm font-medium transition-colors relative group px-2 py-1 ${
+          activeSection === id ? 'text-white' : 'text-zinc-400 hover:text-white'
+        }`}
+        data-cursor="pointer"
+      >
+        {label}
+        {activeSection === id && (
+          <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-500 rounded-full animate-fade-in" />
+        )}
+      </button>
+    </Magnetic>
   );
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-indigo-500 selection:text-white overflow-x-hidden relative">
+      <CustomCursor />
+      <div className="bg-noise" />
+      
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 border-b ${scrolled ? 'bg-zinc-950/80 backdrop-blur-lg border-zinc-800 py-4' : 'bg-transparent border-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <button onClick={() => scrollToSection('about')} className="text-xl font-bold tracking-tighter flex items-center gap-2 z-50 hover:opacity-80 transition-opacity text-left">
+          <button onClick={() => scrollToSection('about')} className="text-xl font-bold tracking-tighter flex items-center gap-2 z-50 hover:opacity-80 transition-opacity text-left" data-cursor="pointer">
             <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-black font-black shrink-0">M</div>
             <span className="hidden sm:inline">Mehmet Eren Ozyoldash</span>
             <span className="sm:hidden">M. Eren Ozyoldash</span>
@@ -143,33 +151,42 @@ const AppContent: React.FC = () => {
             <NavLink id="contact" label="Contact" />
             
             <div className="flex items-center gap-2 ml-4">
-              <a 
-                href="https://github.com/mehmeterenozyoldas-maker" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-zinc-200 transition-colors"
-              >
-                <GithubIcon className="w-4 h-4" />
-                <span>GitHub</span>
-              </a>
-              <a 
-                href="https://www.youtube.com/@Techne89" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-zinc-200 transition-colors"
-              >
-                <YoutubeIcon className="w-4 h-4" />
-                <span>YouTube</span>
-              </a>
-              <a 
-                href="https://mehmeterenozyoldas.medium.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-zinc-200 transition-colors"
-              >
-                <MediumIcon className="w-4 h-4" />
-                <span>Medium</span>
-              </a>
+              <Magnetic>
+                <a 
+                  href="https://github.com/mehmeterenozyoldas-maker" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-zinc-200 transition-colors"
+                  data-cursor="pointer"
+                >
+                  <GithubIcon className="w-4 h-4" />
+                  <span>GitHub</span>
+                </a>
+              </Magnetic>
+              <Magnetic>
+                <a 
+                  href="https://www.youtube.com/@Techne89" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-zinc-200 transition-colors"
+                  data-cursor="pointer"
+                >
+                  <YoutubeIcon className="w-4 h-4" />
+                  <span>YouTube</span>
+                </a>
+              </Magnetic>
+              <Magnetic>
+                <a 
+                  href="https://mehmeterenozyoldas.medium.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-zinc-200 transition-colors"
+                  data-cursor="pointer"
+                >
+                  <MediumIcon className="w-4 h-4" />
+                  <span>Medium</span>
+                </a>
+              </Magnetic>
             </div>
           </div>
 
@@ -217,7 +234,7 @@ const AppContent: React.FC = () => {
               <span className="text-xs font-mono text-zinc-400">Based in Sweden | Originally from Cyprus</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-[0.9]">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-[0.9]" data-cursor="text">
               <EditableText id="hero_title_1" /><br />
               <EditableText id="hero_title_2" /><br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
@@ -225,22 +242,25 @@ const AppContent: React.FC = () => {
               </span>
             </h1>
             
-            <div className="text-lg text-zinc-400 leading-relaxed mb-10 max-w-lg">
+            <div className="text-lg text-zinc-400 leading-relaxed mb-10 max-w-lg" data-cursor="text">
               <EditableText id="hero_bio" multiline />
             </div>
 
             <div className="flex flex-wrap gap-4">
-              <button 
-                onClick={() => scrollToSection('work')}
-                className="px-8 py-4 bg-white text-black rounded-full font-bold hover:bg-zinc-200 transition-colors"
-              >
-                View Work
-              </button>
+              <Magnetic strength={0.6}>
+                <button 
+                  onClick={() => scrollToSection('work')}
+                  className="px-8 py-4 bg-white text-black rounded-full font-bold hover:bg-zinc-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                  data-cursor="pointer"
+                >
+                  View Work
+                </button>
+              </Magnetic>
             </div>
           </div>
 
           {/* Right Column: 3D Avatar */}
-          <div className="order-1 md:order-2 h-[400px] md:h-[600px] w-full relative animate-fade-in">
+          <div className="order-1 md:order-2 h-[400px] md:h-[600px] w-full relative animate-fade-in" data-cursor="grab">
             <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 rounded-full blur-[100px] -z-10" />
             <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-zinc-500">Loading Digital Twin...</div>}>
               <Avatar3D />
@@ -253,7 +273,7 @@ const AppContent: React.FC = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce hidden md:block cursor-pointer" onClick={() => scrollToSection('work')}>
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce hidden md:block cursor-pointer" onClick={() => scrollToSection('work')} data-cursor="pointer">
            <div className="w-6 h-10 border-2 border-zinc-700 rounded-full flex justify-center p-1 hover:border-indigo-400 transition-colors">
              <div className="w-1 h-2 bg-zinc-500 rounded-full" />
            </div>
@@ -265,24 +285,26 @@ const AppContent: React.FC = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-16 gap-8">
             <div className="max-w-xl">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">Selected Work</h2>
-              <p className="text-zinc-400">200+ vibe coded creative experiences and products, interactive installations, creative design tools, speculative mini projects, and games for kids. Showing <span className="text-white font-bold">{filteredProjects.length}</span> {filteredProjects.length === 1 ? 'project' : 'projects'}.</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4" data-cursor="text">Selected Work</h2>
+              <p className="text-zinc-400" data-cursor="text">200+ vibe coded creative experiences and products, interactive installations, creative design tools, speculative mini projects, and games for kids. Showing <span className="text-white font-bold">{filteredProjects.length}</span> {filteredProjects.length === 1 ? 'project' : 'projects'}.</p>
             </div>
             
             {/* Filter Bar */}
             <div className="flex flex-wrap gap-2 lg:justify-end">
               {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase border transition-all duration-300 ${
-                    selectedCategory === cat 
-                      ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20' 
-                      : 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-200'
-                  }`}
-                >
-                  {cat}
-                </button>
+                <Magnetic key={cat} strength={0.3}>
+                  <button
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-4 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase border transition-all duration-300 ${
+                      selectedCategory === cat 
+                        ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20' 
+                        : 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-200'
+                    }`}
+                    data-cursor="pointer"
+                  >
+                    {cat}
+                  </button>
+                </Magnetic>
               ))}
             </div>
           </div>
@@ -310,11 +332,11 @@ const AppContent: React.FC = () => {
       </section>
 
        {/* Interactive CV Terminal */}
-       <section id="trajectory" className="py-20 px-6 bg-zinc-900/30">
-        <div className="max-w-6xl mx-auto">
+       <section id="trajectory" className="py-20 px-6 bg-zinc-900/30 relative">
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="mb-16 text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">The Data Deck</h2>
-            <p className="text-zinc-400 max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4" data-cursor="text">The Data Deck</h2>
+            <p className="text-zinc-400 max-w-2xl mx-auto" data-cursor="text">
               Explore my trajectory through this interactive terminal. 
               Enable the camera to navigate using hand gestures (Minority Report style), or simply click through.
             </p>
@@ -327,32 +349,36 @@ const AppContent: React.FC = () => {
       {/* Contact Section */}
       <section id="contact" className="py-32 px-6">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tighter"><EditableText id="contact_headline" /></h2>
-          <p className="text-xl text-zinc-400 mb-12">
+          <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tighter" data-cursor="text"><EditableText id="contact_headline" /></h2>
+          <p className="text-xl text-zinc-400 mb-12" data-cursor="text">
             <EditableText id="contact_sub" />
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-            <a href="mailto:mehmeterenozyoldas@gmail.com" className="inline-flex items-center gap-3 text-xl font-bold bg-white text-black px-8 py-4 rounded-full hover:bg-zinc-200 transition-all">
-              Email Me <ExternalLinkIcon className="w-5 h-5" />
-            </a>
-            <a href="https://se.linkedin.com/in/m-e-ozyoldash" target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 text-xl font-bold border border-zinc-700 text-white px-8 py-4 rounded-full hover:bg-zinc-800 transition-all">
-              LinkedIn
-            </a>
+            <Magnetic strength={0.5}>
+              <a href="mailto:mehmeterenozyoldas@gmail.com" className="inline-flex items-center gap-3 text-xl font-bold bg-white text-black px-8 py-4 rounded-full hover:bg-zinc-200 transition-all" data-cursor="pointer">
+                Email Me <ExternalLinkIcon className="w-5 h-5" />
+              </a>
+            </Magnetic>
+            <Magnetic strength={0.5}>
+              <a href="https://se.linkedin.com/in/m-e-ozyoldash" target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 text-xl font-bold border border-zinc-700 text-white px-8 py-4 rounded-full hover:bg-zinc-800 transition-all" data-cursor="pointer">
+                LinkedIn
+              </a>
+            </Magnetic>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-zinc-800 relative">
+      <footer className="py-12 px-6 border-t border-zinc-800 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-zinc-500 text-sm">
+          <p className="text-zinc-500 text-sm" data-cursor="text">
             © 2024 Mehmet Eren Ozyoldash. Built with precision and care.
           </p>
           <div className="flex gap-6">
-             <a href="https://mehmeterenozyoldas.medium.com" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors">Medium</a>
-             <a href="https://se.linkedin.com/in/m-e-ozyoldash" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors">LinkedIn</a>
-             <a href="https://github.com/mehmeterenozyoldas-maker" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors">GitHub</a>
-             <a href="https://www.youtube.com/@Techne89" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors">YouTube</a>
+             <a href="https://mehmeterenozyoldas.medium.com" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors" data-cursor="pointer">Medium</a>
+             <a href="https://se.linkedin.com/in/m-e-ozyoldash" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors" data-cursor="pointer">LinkedIn</a>
+             <a href="https://github.com/mehmeterenozyoldas-maker" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors" data-cursor="pointer">GitHub</a>
+             <a href="https://www.youtube.com/@Techne89" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors" data-cursor="pointer">YouTube</a>
           </div>
         </div>
         
@@ -362,6 +388,7 @@ const AppContent: React.FC = () => {
              onClick={handleAdminClick} 
              className="p-3 bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-600 rounded-full transition-all shadow-lg"
              title={isEditMode ? "Exit Admin Mode" : "Admin Access"}
+             data-cursor="pointer"
           >
             <LockIcon className={`w-5 h-5 ${isEditMode ? 'text-green-500' : ''}`} />
           </button>
@@ -375,6 +402,7 @@ const AppContent: React.FC = () => {
             <button 
               onClick={() => setShowLoginModal(false)}
               className="absolute top-4 right-4 text-zinc-500 hover:text-white"
+              data-cursor="pointer"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
@@ -399,6 +427,7 @@ const AppContent: React.FC = () => {
                   placeholder="Password"
                   className={`w-full bg-zinc-950 border ${loginError ? 'border-red-500' : 'border-zinc-700'} rounded-lg px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 transition-colors`}
                   autoFocus
+                  data-cursor="text"
                 />
                 {loginError && <p className="text-red-500 text-xs mt-2 ml-1">Incorrect password</p>}
               </div>
@@ -406,6 +435,7 @@ const AppContent: React.FC = () => {
               <button 
                 type="submit"
                 className="w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 font-bold transition-all shadow-lg shadow-indigo-900/20"
+                data-cursor="pointer"
               >
                 Unlock Portfolio
               </button>
@@ -414,7 +444,7 @@ const AppContent: React.FC = () => {
         </div>
       )}
 
-      {/* Admin Toolbar (Only visible in Edit Mode) */}
+      {/* Admin Toolbar */}
       {isEditMode && (
         <div className="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 p-4 z-[60] flex justify-between items-center shadow-2xl">
           <div className="flex items-center gap-4">
@@ -425,13 +455,13 @@ const AppContent: React.FC = () => {
             <span className="text-xs text-zinc-500 hidden sm:inline">Click dashed text to edit. Changes save to browser.</span>
           </div>
           <div className="flex gap-3">
-            <button onClick={resetContent} className="px-4 py-2 bg-red-900/30 text-red-400 hover:bg-red-900/50 text-xs font-bold rounded-md transition-colors border border-red-900/50">
+            <button onClick={resetContent} className="px-4 py-2 bg-red-900/30 text-red-400 hover:bg-red-900/50 text-xs font-bold rounded-md transition-colors border border-red-900/50" data-cursor="pointer">
               Reset
             </button>
-            <button onClick={downloadSourceCode} className="px-4 py-2 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-xs font-bold rounded-md transition-colors border border-zinc-700">
+            <button onClick={downloadSourceCode} className="px-4 py-2 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-xs font-bold rounded-md transition-colors border border-zinc-700" data-cursor="pointer">
               Download Source
             </button>
-            <button onClick={saveChanges} className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-500 text-xs font-bold rounded-md transition-colors shadow-lg shadow-indigo-500/20">
+            <button onClick={saveChanges} className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-500 text-xs font-bold rounded-md transition-colors shadow-lg shadow-indigo-500/20" data-cursor="pointer">
               Save Locally
             </button>
           </div>

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Environment, ContactShadows, RoundedBox, Cylinder, Html, Sparkles } from '@react-three/drei';
+import { Float, Environment, ContactShadows, RoundedBox, Cylinder, Html, Sparkles, PresentationControls } from '@react-three/drei';
 import * as THREE from 'three';
 
 // --- Audio Helper for 8-bit Sounds ---
@@ -192,8 +192,6 @@ const LegoAvatar = () => {
   const torsoRef = useRef<THREE.Group>(null);
   const leftArmRef = useRef<THREE.Group>(null);
   const rightArmRef = useRef<THREE.Group>(null);
-  const leftLegRef = useRef<THREE.Group>(null);
-  const rightLegRef = useRef<THREE.Group>(null);
   const gameboyScreenRef = useRef<THREE.Mesh>(null);
   const screenLightRef = useRef<THREE.PointLight>(null);
   
@@ -363,7 +361,8 @@ const LegoAvatar = () => {
       </group>
 
       {/* --- LEGS --- */}
-      <group ref={leftLegRef} position={[-0.2, 0.75, 0]}>
+      {/* ... (Previous Leg Code remains same) ... */}
+      <group position={[-0.2, 0.75, 0]}>
          <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI/2]}>
             <cylinderGeometry args={[0.12, 0.12, 0.22, 32]} />
             <PlasticMaterial color={colors.jeans} />
@@ -384,7 +383,7 @@ const LegoAvatar = () => {
          </mesh>
       </group>
 
-      <group ref={rightLegRef} position={[0.2, 0.75, 0]}>
+      <group position={[0.2, 0.75, 0]}>
          <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI/2]}>
             <cylinderGeometry args={[0.12, 0.12, 0.22, 32]} />
             <PlasticMaterial color={colors.jeans} />
@@ -406,15 +405,14 @@ const LegoAvatar = () => {
          ref={torsoRef} 
          position={[0, 1.45, 0]}
          onClick={handleWave}
-         onPointerOver={() => setHoveredPart('Torso')}
-         onPointerOut={() => setHoveredPart(null)}
+         onPointerOver={() => { document.body.style.cursor = 'none'; setHoveredPart('Torso'); }}
+         onPointerOut={() => { document.body.style.cursor = 'none'; setHoveredPart(null); }}
       >
          <mesh rotation={[0, Math.PI/4, 0]}>
             <cylinderGeometry args={[0.4, 0.54, 0.8, 4]} />
             <PlasticMaterial color={colors.shirtOuter} />
          </mesh>
          
-         {/* FIX: Moved Z from 0.28 to 0.31 to stop Z-fighting */}
          <mesh position={[0, -0.05, 0.31]} scale={[0.35, 0.6, 1]}>
              <planeGeometry />
              <meshPhysicalMaterial color={colors.shirtInner} roughness={0.6} />
@@ -425,7 +423,7 @@ const LegoAvatar = () => {
          
          {hoveredPart === 'Torso' && !gaming && !waving && (
             <Html position={[0.6, 0.2, 0]} center>
-                <div className="bg-black/70 text-white text-[10px] px-2 py-1 rounded-full whitespace-nowrap backdrop-blur-sm pointer-events-none">
+                <div className="bg-black/70 text-white text-[10px] px-2 py-1 rounded-full whitespace-nowrap backdrop-blur-sm pointer-events-none border border-zinc-700">
                    Click to Wave
                 </div>
             </Html>
@@ -556,13 +554,12 @@ const LegoAvatar = () => {
              
              {hoveredPart === 'Head' && !gaming && !jamming && (
                 <Html position={[0, 0.7, 0]} center>
-                    <div className="bg-black/70 text-white text-[10px] px-2 py-1 rounded-full whitespace-nowrap backdrop-blur-sm pointer-events-none">
+                    <div className="bg-black/70 text-white text-[10px] px-2 py-1 rounded-full whitespace-nowrap backdrop-blur-sm pointer-events-none border border-zinc-700">
                        {thinking ? "Stop Thinking" : "Deep Thought"}
                     </div>
                 </Html>
              )}
 
-             {/* FIX: Moved Z from 0.32 to 0.36 to prevent head clipping */}
              <group position={[0, 0.05, 0.36]}>
                 {/* Eyes */}
                 <group position={[-0.14, 0, 0]}>
@@ -634,7 +631,7 @@ const LegoAvatar = () => {
                  
                  {hoveredPart === 'Headphones' && (
                     <Html position={[0, 1.2, 0]} center style={{ pointerEvents: 'none' }}>
-                        <div className="bg-black/70 text-white text-[10px] px-2 py-1 rounded-full whitespace-nowrap backdrop-blur-sm">
+                        <div className="bg-black/70 text-white text-[10px] px-2 py-1 rounded-full whitespace-nowrap backdrop-blur-sm border border-zinc-700">
                            {jamming ? "Stop Music" : "Jam Out"}
                         </div>
                     </Html>
@@ -648,7 +645,7 @@ const LegoAvatar = () => {
 
 const Avatar3D: React.FC = () => {
   return (
-    <div className="w-full h-full cursor-grab active:cursor-grabbing">
+    <div className="w-full h-full" data-cursor="grab">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 40 }}
         shadows
@@ -657,7 +654,6 @@ const Avatar3D: React.FC = () => {
       >
         <color attach="background" args={['transparent']} />
         
-        {/* Cinematic Lighting Setup */}
         <ambientLight intensity={0.4} />
         <spotLight 
            position={[5, 10, 5]} 
@@ -667,18 +663,28 @@ const Avatar3D: React.FC = () => {
            castShadow 
            shadow-bias={-0.0001}
         />
-        {/* Cool Rim Light */}
         <pointLight position={[-5, 2, -5]} intensity={0.8} color="#4f46e5" />
-        {/* Warm Fill Light */}
         <pointLight position={[5, -2, 2]} intensity={0.5} color="#f472b6" />
         
         <Environment preset="city" blur={0.8} />
 
         <CreativeParticles />
 
-        <Float speed={2} rotationIntensity={0.05} floatIntensity={0.2}>
-           <LegoAvatar />
-        </Float>
+        <PresentationControls
+          global={false} 
+          cursor={false}
+          snap={true} 
+          speed={1.5} 
+          zoom={1} 
+          rotation={[0, 0, 0]} 
+          polar={[-Math.PI / 6, Math.PI / 6]} 
+          azimuth={[-Math.PI / 3, Math.PI / 3]} 
+          config={{ mass: 2, tension: 150, friction: 20 }}
+        >
+          <Float speed={2} rotationIntensity={0.05} floatIntensity={0.2}>
+             <LegoAvatar />
+          </Float>
+        </PresentationControls>
         
         <ContactShadows 
            position={[0, -2.5, 0]} 
